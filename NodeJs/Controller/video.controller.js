@@ -112,7 +112,7 @@ import Video from "../Model/Video.js";
                 return res.status(403).json({message: "You need to login to upload a video"});
             }
             const { title, description, thumbnail, videoUrl, videoId} = req.body;
-            if (!title || !description || !thumbnail || !videoUrl || videoId) {
+            if (!title || !description || !thumbnail || !videoUrl || !videoId) {
                 return res.status(400).json({ message: "Missing required fields" });
             }
             const video = await Video.findOne({_id: videoId});

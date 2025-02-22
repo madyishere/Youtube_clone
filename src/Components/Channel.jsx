@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { fetchUserData } from "./LoginForm";
 import {  User, Video, Settings, Upload, MoreVertical, Edit, Trash2 } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import ChannelVideoCard from "./ChannelVideoCard";
 
 const Channel = () => {
@@ -20,6 +20,7 @@ const Channel = () => {
   const [showMenu, setShowMenu] = useState(false)
   const [showMenuButton, setShowMenuButton] = useState(false);
   const { channelId } = useParams();
+  const navigate = useNavigate();
   console.log(`channel Id = ${channelId}`);
 
   
@@ -109,22 +110,38 @@ const Channel = () => {
       e.preventDefault();
       
       try {
-        const response = await axios.post('http://localhost:3000/videos/upload', {
-          title,
-          description,
-          videoUrl,
-          thumbnail,
-          channelId: user.channelId
-        }, {
-          headers: {
-            'Authorization': `JWT ${token}`
-          }
-        });
+        let response;
+        if (isEdit) {
+          response = await axios.put(`http://localhost:3000/video`, {
+                title,
+                description,
+                videoUrl,
+                thumbnail,
+                videoId: video._id
+              }, {
+                headers: {
+                  'Authorization': `JWT ${token}`
+                }
+              });
+              navigate(0);
+        } else {
+          response = await axios.post('http://localhost:3000/videos/upload', {
+            title,
+            description,
+            videoUrl,
+            thumbnail,
+            channelId: user.channelId
+          }, {
+            headers: {
+              'Authorization': `JWT ${token}`
+            }
+          });
+          setVideos(prev => [...prev, response.data.video]);
+        }
         
-        setVideos(prev => [...prev, response.data.video]);
         onClose();
       } catch (error) {
-        console.error('Error uploading video:', error);
+        console.error('Error uploading/editing video:', error);
       }
     };
     console.log({channelData})

@@ -45,7 +45,7 @@ const ChannelVideoCard = ({
     }
   };
 
-  const handleEdit = (e) => {
+  const handleEdit = async (e) => {
     e.preventDefault();
     onEditVideo(video);
     setShowMenu(false);
