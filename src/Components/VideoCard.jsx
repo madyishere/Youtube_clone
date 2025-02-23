@@ -76,7 +76,7 @@ const VideoCard = ({ video }) => {
 
           {/* Views and Date */}
           <p className="text-xs sm:text-sm text-gray-600">
-            {formatViews(video.views)} views • {formatDate(video.uploadDate)}
+            {formatViews(video.views)} views • {formatDate(video.uploadDate || video.createdAt)}
           </p>
         </div>
       </div>
